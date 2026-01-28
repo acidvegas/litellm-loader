@@ -1,0 +1,8 @@
+# LiteLLM Config Generator - Developed by acidvegas (https://github.com/acidvegas)
+# requirements.txt
+
+apv
+python-dotenv
+litellm
+litellm[proxy]
+pydantic[email]

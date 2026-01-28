@@ -1,0 +1,5 @@
+# LiteLLM Config Generator - Developed by acidvegas (https://github.com/acidvegas)
+# .gitignore
+
+.env
+*.yaml
