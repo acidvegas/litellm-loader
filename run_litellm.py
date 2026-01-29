@@ -83,7 +83,7 @@ class ModelFetcher:
 				# Ollama and vLLM don't need an API key, just the base URL
 				if provider == 'ollama' and os.getenv('OLLAMA_API_BASE'):
 					pass
-				elif provider == 'vllm' and os.getenv('VLLM_API_BASE'):
+				elif provider == 'vllm' and os.getenv('HOSTED_VLLM_API_BASE'):
 					pass
 				else:
 					logging.warning(f'Skipping {provider}: API key not set')
@@ -208,7 +208,7 @@ class ModelFetcher:
 	def fetch_models_vllm(self):
 		'''Add a list of models from vLLM to the LiteLLM config'''
 
-		vllm_endpoint = os.getenv('VLLM_API_BASE') or 'http://localhost:8000'
+		vllm_endpoint = os.getenv('HOSTED_VLLM_API_BASE') or 'http://localhost:8000'
 
 		# Make the request to the vLLM API (OpenAI-compatible endpoint)
 		data = make_request(f'{vllm_endpoint}/v1/models')
@@ -223,7 +223,7 @@ class ModelFetcher:
 
 		# Add the models to the config
 		for model in models:
-			self.add_model(model['id'], {'model': f'openai/{model["id"]}', 'api_base': vllm_endpoint})
+			self.add_model(model['id'], {'model': f'vllm/{model["id"]}', 'api_base': vllm_endpoint+'/v1'})
 
 
 	def fetch_models_openai(self):
