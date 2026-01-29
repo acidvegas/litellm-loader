@@ -11,6 +11,7 @@ Automatically fetches available models from multiple AI providers and generates 
 - Perplexity
 - ElevenLabs
 - Ollama
+- vLLM
 
 ## Setup
 
@@ -28,6 +29,7 @@ XAI_API_KEY=your_key
 PERPLEXITYAI_API_KEY=your_key
 ELEVEN_LABS_API_KEY=your_key
 OLLAMA_API_BASE=http://localhost:11434
+VLLM_API_BASE=http://localhost:8000
 ```
 
 ## Usage

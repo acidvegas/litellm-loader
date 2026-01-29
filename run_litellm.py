@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# LiteLLM Config Generator - Developed by acidvegas (https://github.com/acidvegas)
+# LiteLLM Config Generator - Developed by acidvegas (https://github.com/acidvegas/litellm)
 
 import json
 import logging
@@ -80,8 +80,10 @@ class ModelFetcher:
 
 			# Check if we have an API key for this provider
 			if not getattr(API_KEY, provider, None):
-				# Ollama doesn't need an API key, just the base URL
+				# Ollama and vLLM don't need an API key, just the base URL
 				if provider == 'ollama' and os.getenv('OLLAMA_API_BASE'):
+					pass
+				elif provider == 'vllm' and os.getenv('VLLM_API_BASE'):
 					pass
 				else:
 					logging.warning(f'Skipping {provider}: API key not set')
@@ -201,6 +203,27 @@ class ModelFetcher:
 		# Add the models to the config
 		for model in models:
 			self.add_model(model['name'], {'model': f'ollama/{model["name"]}', 'api_base': ollama_endpoint})
+
+
+	def fetch_models_vllm(self):
+		'''Add a list of models from vLLM to the LiteLLM config'''
+
+		vllm_endpoint = os.getenv('VLLM_API_BASE') or 'http://localhost:8000'
+
+		# Make the request to the vLLM API (OpenAI-compatible endpoint)
+		data = make_request(f'{vllm_endpoint}/v1/models')
+
+		# Parse the models list
+		models = data.get('data', [])
+
+		# Update the model count for this provider
+		self.counts['vLLM'] = len(models)
+
+		logging.info(f'Found {len(models):,} vLLM models')
+
+		# Add the models to the config
+		for model in models:
+			self.add_model(model['id'], {'model': f'openai/{model["id"]}', 'api_base': vllm_endpoint})
 
 
 	def fetch_models_openai(self):
